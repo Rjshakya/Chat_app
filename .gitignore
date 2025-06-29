@@ -2,6 +2,7 @@
 
 /backend/.env
 /frontend/.env
+/backend/aiven.pem
 
 # ignore node modules
 **/node_modules/
