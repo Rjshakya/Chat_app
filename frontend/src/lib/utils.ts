@@ -44,8 +44,8 @@ export const handle_chat = async (
   }
 };
 
-export const handle_group_chat = async (chatID: string) => {
+// export const handle_group_chat = async (chatID: string) => {
     
   
 
-}
+// }

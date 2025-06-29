@@ -5,7 +5,7 @@ const H1 = ({
   className,
 }: {
   text: React.ReactNode;
-  className: string;
+  className?: string;
 }) => {
   return (
     <h1
