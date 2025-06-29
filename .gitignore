@@ -1,0 +1,22 @@
+# ignore env variables
+
+/backend/.env
+/frontend/.env
+
+# ignore node modules
+**/node_modules/
+
+/backend/dist
+/frontend/dist
+
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
