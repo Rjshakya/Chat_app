@@ -2,13 +2,14 @@ import { socket_events } from "@/services/socket/socket.service";
 import { io } from "socket.io-client";
 
 const uri = `${import.meta.env.VITE_BACKEND_URL}`;
+
 export const socket = io(uri, {
   autoConnect: false,
   withCredentials: true,
-});
+
+})
 
 export const socket_services = new socket_events(socket);
-
 
 socket.on("connect_error", (err) => socket_services.on_connect_err(err));
 

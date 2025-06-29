@@ -106,7 +106,7 @@ class KafkaClient {
           try {
             let msg = JSON.parse(message.value?.toString()!) as UserEvent;
             await User.findByIdAndUpdate(
-              new mongoose.Types.ObjectId(msg.user.id),
+              new mongoose.Types.ObjectId(msg?.user?.id),
               {
                 last_loggedIn: msg.last_loggedIn,
                 isOnline: msg?.online,

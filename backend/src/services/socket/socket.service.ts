@@ -40,12 +40,13 @@ export class socketServices {
   constructor(
     socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
   ) {
+    
     this.userSocket = socket;
   }
 
   public async onDisconnect() {
     console.log("user disconnected");
-    personalMessageMap.delete(this.userSocket?.user.id!);
+    personalMessageMap.delete(this.userSocket?.user?.id!);
 
     await kafkaClient.produceUserEvent({
       last_loggedIn: Date.now(),
@@ -62,19 +63,25 @@ export class socketServices {
 
       if (receiverSocket) {
         socketIO
-          .to(receiverSocket)
+          ?.to(receiverSocket)
           .emit("offline", this.userSocket?.chat?.sender);
       }
     }
   }
 
   public async onPersonalMessage(msg: Message) {
+    
+    
     const receiverSocketID = personalMessageMap.get(msg.receiver[0]);
+    console.log(receiverSocketID);
+    
     try {
       await produceMessage(msg);
-      socketIO.to(receiverSocketID!).emit("received:pvt_msg", msg);
+      socketIO?.to(receiverSocketID!).emit("received:pvt_msg", msg)
     } catch (error) {
       this.userSocket?._error("server failed to send msg");
+      console.log(error);
+      
     }
   }
 
@@ -86,7 +93,7 @@ export class socketServices {
       this.userSocket?.chat?.receiver
     );
     socketIO
-      .to(receiverSocketID!)
+      ?.to(receiverSocketID!)
       .emit("online", this.userSocket?.chat?.sender);
   }
 
@@ -125,7 +132,7 @@ export class socketServices {
     }; // so that frontend can have senders photo and name to show ; in group message
 
     socketIO
-      .to(msg?.group)
+      ?.to(msg?.group)
       .except(this.userSocket?.id!)
       .emit("received:group_msg", customMessage);
   }

@@ -120,11 +120,14 @@ export const saveInRecentChat: RequestHandler = async (req, res) => {
 
 export const getRecentChat: RequestHandler = async (req, res) => {
   try {
+
     if (!req?.query) {
       res.status(400).json({
         msg: "bad request",
         success: false,
       });
+
+      return;
     }
 
     const chatOwner = req?.query?.chatOwner;
@@ -142,11 +145,15 @@ export const getRecentChat: RequestHandler = async (req, res) => {
       msg: "recent chats",
       recent_chats,
     });
+
+    return;
   } catch (error) {
     console.log(error);
     res.status(500).json({
       msg: "server error",
       error,
     });
+
+    return;
   }
 };

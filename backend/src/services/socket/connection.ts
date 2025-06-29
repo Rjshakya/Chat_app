@@ -9,7 +9,9 @@ export const onSocketConnection = async (
   if (!socket) return;
 
   const SocketServices = new socketServices(socket);
-  personalMessageMap.set(socket?.user.id, socket.id);
+  
+  
+  personalMessageMap.set(socket?.user?.id, socket.id);
   await produceUserEvent(Date.now(), true, socket?.user);
   SocketServices.joinGroups(socket?.user?.id);
   console.log("user connected with socket");

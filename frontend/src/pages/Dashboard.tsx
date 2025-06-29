@@ -67,9 +67,11 @@ export const Dashboard = () => {
 
   useEffect(() => {
     if (!isAuthenticated) {
+      socket.disconnect()
       navigate("/login", { replace: true });
+      
     } else {
-      socket.connect();
+      socket.connect()
     }
   }, [isAuthenticated]);
 

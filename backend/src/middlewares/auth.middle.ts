@@ -42,5 +42,7 @@ export const checkAuthMiddleWare: RequestHandler = async (
       msg: "Jwt verify error or server error . please login",
       error: true,
     });
+
+    return;
   }
 };

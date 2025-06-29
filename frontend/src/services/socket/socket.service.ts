@@ -26,10 +26,9 @@ export class socket_events {
     useMessageStore.getState().updateMsgs(msg);
   }
 
-  public onGroupMsg(msg:Message){
+  public onGroupMsg(msg: Message) {
     console.log(msg);
     useMessageStore.getState().updateMsgs(msg);
-    
   }
 
   public sendMsg(
@@ -40,25 +39,32 @@ export class socket_events {
   ) {
     const payload = {
       content,
-      receiver:[receiver],
+      receiver: [receiver],
       sender,
       chat,
     };
+
+    console.log(this?.socket);
 
     useMessageStore.getState().updateMsgs(payload);
     this.socket.emit("send:pvt_msg", payload);
   }
 
-  public sendGroupMsg(content: string, group: string  , sender:string , receivers:string[]) {
+  public sendGroupMsg(
+    content: string,
+    group: string,
+    sender: string,
+    receivers: string[]
+  ) {
     const payload = {
       content,
-      receiver:receivers,
+      receiver: receivers,
       sender,
       group,
     };
 
     // we are using custom payload ; just on client side ; so that messages have sender with its props (e.g ; picture)
-    const customPayload = {...payload , sender:useAuthStore.getState().user!}
+    const customPayload = { ...payload, sender: useAuthStore.getState().user! };
     useMessageStore.getState().updateMsgs(customPayload);
     this.socket.emit("send:group_msg", payload);
   }

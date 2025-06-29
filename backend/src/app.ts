@@ -23,12 +23,10 @@ import { socketMiddleware } from "./middlewares/socket.auth.middle.js";
 import io from "./config/socketConfig.js";
 import dbConnection from "./config/db.js";
 
-
 const app = express();
 const PORT = process.env.PORT || 8001;
 export const server = createServer(app);
-export const socketIO = io(server)
-
+export const socketIO = io(server);
 
 const MONGO_URL = process.env.MONGO_URL || "";
 dbConnection(MONGO_URL);
@@ -51,9 +49,12 @@ app.use("/chat", chatRouter);
 app.use("/list", listRouter);
 app.use("/groups", groupRouter);
 
-io(server).use((socket, next) => socketMiddleware(socket, next));
-io(server).on("connection", onSocketConnection);
-server.listen(PORT, () => console.log(`listening on PORT:${PORT} `));
+server.listen(PORT, () => {
+  socketIO
+    ?.use((socket, next) => socketMiddleware(socket, next))
+    .on("connection", (socket) => onSocketConnection(socket));
+  console.log(`server is up at ${PORT}`);
+})
 
 try {
   await kafkaClient.consumeMessage();
