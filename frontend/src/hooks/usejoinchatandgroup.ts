@@ -11,7 +11,7 @@ type Params = {
   chat: string;
 };
 
-const useJoinChat = ({ user, receiver, chat }: Params) => {
+export const useJoinChat = ({ user, receiver, chat }: Params) => {
   useEffect(() => {
     if (!socket.connected) return;
 
@@ -30,10 +30,9 @@ const useJoinChat = ({ user, receiver, chat }: Params) => {
     return () => {
       if (clearTime) clearTimeout(clearTime);
     };
-  }, [socket.connected, user, chat, receiver]);
+  }, [socket.connected, chat]);
 };
 
-export default useJoinChat;
 
 export const useUsersGroups = ({ user }: { user: user | null }) => {
   useEffect(() => {

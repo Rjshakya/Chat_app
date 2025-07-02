@@ -10,6 +10,7 @@ export interface user {
   picture: string;
   role: string;
   isOnline:boolean
+  
 }
 
 interface Auth {

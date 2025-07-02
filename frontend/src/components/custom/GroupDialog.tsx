@@ -16,6 +16,7 @@ export interface IGroupUser {
   _id: string;
   name?: string;
   email?: string;
+  username?:string
 }
 
 export const GroupDialog = () => {

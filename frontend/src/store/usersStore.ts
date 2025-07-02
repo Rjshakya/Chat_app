@@ -9,6 +9,7 @@ export interface UserObj {
     last_LoggedIn?:number|null
     isOnline:boolean|null
     picture:string
+    username?:string
   
 }
 

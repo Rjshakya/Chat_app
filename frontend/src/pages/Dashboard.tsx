@@ -7,17 +7,20 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import useJoinChat, { useUsersGroups } from "@/hooks/usejoinchatandgroup";
-import { socket } from "@/lib/socket";
+import { useUsersGroups, useJoinChat } from "@/hooks/usejoinchatandgroup";
+import useSocket from "@/hooks/useSocket";
 import { handle_get_chat_messages } from "@/services/chat/chat.service";
-import { handle_get_group, handle_get_group_messages } from "@/services/group/handle.group";
+import {
+  handle_get_group,
+  handle_get_group_messages,
+} from "@/services/group/handle.group";
 import { useAuthStore } from "@/store/authStore";
 import useChatStore from "@/store/chatStore";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
 export const Dashboard = () => {
-  const { isAuthenticated, user, checkAuth } = useAuthStore((state) => state);
+  const { isAuthenticated, user } = useAuthStore((state) => state);
   const navigate = useNavigate();
   const [showChatUI, setShowChatUI] = useState(false);
   const [chat, setChat] = useState("");
@@ -54,7 +57,7 @@ export const Dashboard = () => {
 
     try {
       await handle_get_group(groupID!);
-      await handle_get_group_messages(groupID!)
+      await handle_get_group_messages(groupID!);
       setShowGroup(true);
     } catch (error) {
       console.log(error);
@@ -62,16 +65,8 @@ export const Dashboard = () => {
   };
 
   useEffect(() => {
-    checkAuth();
-  }, []);
-
-  useEffect(() => {
     if (!isAuthenticated) {
-      socket.disconnect()
       navigate("/login", { replace: true });
-      
-    } else {
-      socket.connect()
     }
   }, [isAuthenticated]);
 
@@ -80,6 +75,7 @@ export const Dashboard = () => {
     handleGroup();
   }, [searchParams]);
 
+  useSocket(isAuthenticated);
   useJoinChat({ user, receiver, chat });
   useUsersGroups({ user });
 
@@ -94,7 +90,7 @@ export const Dashboard = () => {
             </div>
           </header>
 
-          {(showGroup || showChatUI)|| (
+          {showGroup || showChatUI || (
             <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
               <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min flex flex-col items-center justify-center ">
                 <SearchComponent forModal={false} />

@@ -51,6 +51,7 @@ export const handle_get_chat_messages = async (chatID: string) => {
     });
 
     if (res.status === 200) {
+      useChatStore.setState({chat:chatID})
       useMessageStore.setState({ messages: res?.data?.messages });
       return res?.data?.messages;
     }

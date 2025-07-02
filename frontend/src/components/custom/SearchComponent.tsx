@@ -19,13 +19,20 @@ import { P } from "../typography/P";
 import type { IGroupUser } from "./GroupDialog";
 import type { IChat } from "./ChatUI";
 
+interface IselectUser {
+  _id: string;
+  name?: string;
+  email?: string;
+  username?: string;
+}
+
 const SearchComponent = ({
   forModal,
   selected_list,
   setSelected_list,
 }: {
   forModal: boolean;
-  selected_list?: IGroupUser[];
+  selected_list?: IselectUser[];
   setSelected_list?: React.Dispatch<React.SetStateAction<IGroupUser[]>>;
 }) => {
   const [showModal, setShowModal] = useState(false);
@@ -118,6 +125,7 @@ const SearchComponent = ({
                   key={u?._id}
                 >
                   <CardTitle className=" text-sm">{u?.name}</CardTitle>
+                  
                   <Button
                     onClick={() =>
                       forModal &&
@@ -195,7 +203,7 @@ const SearchComponent = ({
                     <CardHeader className=" gap-0">
                       <CardTitle className=" text-sm">{u.name}</CardTitle>
                       <CardDescription className=" text-xs">
-                        {u.email}
+                        {u?.username}
                       </CardDescription>
                     </CardHeader>
                   </Card>

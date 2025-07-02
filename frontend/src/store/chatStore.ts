@@ -7,39 +7,40 @@ interface IchatStore {
   receiver: UserObj | null;
   sender: UserObj | null;
   setReceiver: (receiver: UserObj) => void;
-  setOnline:() => void
-  setOffline:() => void
-  recent_chats:IChat[]|IGroupChat[]|[]
+  setOnline: () => void;
+  setOffline: () => void;
+  recent_chats: IChat[] | IGroupChat[] | [];
+  chat: string | null;
 }
+
+
 
 const useChatStore = create<IchatStore>()(
   persist(
-    (set , get) => ({
+    (set, get) => ({
+      chat: null,
       receiver: null,
       sender: null,
-      recent_chats:[],
+      recent_chats: [],
       setReceiver: (receiver) => {
         set({
           receiver,
         });
       },
 
-      setOnline:() => {
-        const prev = get()?.receiver
+      setOnline: () => {
+        const prev = get()?.receiver;
         set({
-          receiver:{ ...prev! , isOnline:true }
-        })
+          receiver: { ...prev!, isOnline: true },
+        });
       },
 
-      setOffline:() => {
-        const prev = get()?.receiver
+      setOffline: () => {
+        const prev = get()?.receiver;
         set({
-          receiver:{ ...prev! , isOnline:false }
-        })
+          receiver: { ...prev!, isOnline: false },
+        });
       },
-
-      
-
     }),
     {
       name: "chatStore",
@@ -53,4 +54,3 @@ const useChatStore = create<IchatStore>()(
 );
 
 export default useChatStore;
-

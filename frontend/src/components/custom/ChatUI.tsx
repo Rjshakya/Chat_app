@@ -3,8 +3,8 @@ import { Dot, MenuIcon, Phone, Send } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { useEffect, useRef, useState } from "react";
-import { useMessageStore } from "@/store/messageStore";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useMessageStore, type Message } from "@/store/messageStore";
 
 import type { UserObj } from "@/store/usersStore";
 import { socket_services } from "@/lib/socket";
@@ -31,12 +31,20 @@ const ChatUI = ({
 }: {
   chat: string;
   senderID: string | undefined;
-  
 }) => {
   const [msgInput, setMsgInput] = useState("");
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const { messages } = useMessageStore((s) => s);
   const { receiver: receiverUser } = useChatStore((s) => s);
+  const chatMessages = useMemo(() => {
+    if (!messages || messages?.length < 1) return undefined;
+    let arr: null | Message[] = messages?.filter((m) => m.chat === chat);
+    return arr;
+  }, [messages, chat]);
+
+  // (messages: [] | Message[]) => {
+  //   return messages.filter((m) => m.chat === chat);
+  // };
 
   const handleSendBtn = () => {
     if (!msgInput && !receiverUser?._id && !senderID && !chat) return;
@@ -54,6 +62,7 @@ const ChatUI = ({
     if (bottomRef) {
       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }
+    
   }, [messages]);
 
   return (
@@ -106,10 +115,9 @@ const ChatUI = ({
 
       <div className=" main chai ui w-full h-full col-span-full p-4 mb-4  relative">
         <div className="  bg-muted/30 rounded-xl h-[70vh]  md:h-[75vh] w-full overflow-y-auto p-4 flex flex-col gap-3 relative pb-12">
-          {messages &&
-            messages?.length > 0 &&
-            messages.map((msg) => {
-              
+          {chatMessages &&
+            chatMessages?.length > 0 &&
+            chatMessages.map((msg) => {
               return (
                 <>
                   <div className="w-full">

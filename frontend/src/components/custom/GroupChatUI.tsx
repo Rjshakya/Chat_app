@@ -3,8 +3,8 @@ import { MenuIcon, Phone, Send } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { useEffect, useRef, useState } from "react";
-import { useMessageStore } from "@/store/messageStore";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useMessageStore, type Message } from "@/store/messageStore";
 
 import type { UserObj } from "@/store/usersStore";
 import { socket_services } from "@/lib/socket";
@@ -32,6 +32,14 @@ const GroupChatUI = () => {
   const { messages } = useMessageStore((s) => s);
   const { user } = useAuthStore((s) => s);
   const { group } = useGroupStore((s) => s);
+
+  const groupMessages = useMemo(() => {
+    if (!messages || messages?.length < 1 || !group) return undefined;
+    let arr: null | Message[] = messages?.filter(
+      (m) => m?.group === group?._id
+    );
+    return arr;
+  }, [messages, group]);
 
   const handleSendBtn = () => {
     if (!group && !msgInput && !user) return;
@@ -96,9 +104,9 @@ const GroupChatUI = () => {
 
       <div className=" main chai ui w-full h-full col-span-full p-4 mb-4  relative">
         <div className="  bg-muted/30 rounded-xl h-[70vh]  md:h-[75vh] w-full overflow-y-auto p-4 flex flex-col gap-3 relative pb-12">
-          {messages &&
-            messages?.length > 0 &&
-            messages.map((msg) => {
+          {groupMessages &&
+            groupMessages?.length > 0 &&
+            groupMessages.map((msg) => {
               const sender = msg?.sender as user;
               return (
                 <>
