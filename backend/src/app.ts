@@ -22,9 +22,10 @@ import { UserType } from "./types/common.types.js";
 import { socketMiddleware } from "./middlewares/socket.auth.middle.js";
 import io from "./config/socketConfig.js";
 import dbConnection from "./config/db.js";
+import envVariables from "./config/ENV.js";
 
 const app = express();
-const PORT = process.env.PORT || 8001;
+const { PORT } = envVariables
 export const server = createServer(app);
 export const socketIO = io(server);
 

@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { Types } from "mongoose";
 
 
-interface User {
+export interface User {
   name?: string;
   email?: string;
   id?: Types.ObjectId
@@ -13,6 +13,7 @@ interface User {
 const secretKey = `${process.env.JWTSECRET}`;
 
 export const createTokens = async (user: User) => {
+
   try {
     const accessToken = jwt.sign(user, secretKey, { expiresIn: "10m" });
     const refreshToken = jwt.sign(user, secretKey, { expiresIn: "7d" });

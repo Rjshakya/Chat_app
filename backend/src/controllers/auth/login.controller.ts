@@ -1,38 +1,22 @@
 import { Request, Response, RequestHandler } from "express";
-import googleOauthClient, { getUserInfo } from "../../lib/googleAuth.js";
-import User from "../../models/user.model.js";
-import { createTokens } from "../../lib/jwt.js";
+import { createTokens, User } from "../../lib/jwt.js";
+import { authService } from "../../services/authService.js";
+import mongoose from "mongoose";
 
 export const loginController: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const { code } = req.body;
-    const { tokens } = await googleOauthClient.getToken(code);
-
-    const { email, name, picture } = await getUserInfo(
-      googleOauthClient,
-      tokens
-    );
-
-    let user = await User.findOne({ email });
-
-    if (!user) {
-      user = await User.create({
-        email,
-        name,
-        picture,
-        oauth: "google",
-      });
-    }
+    const { code, username } = req.body;
+    const user = await authService.googleLoginService(code);
 
     const Payload = {
       name: user?.name,
       email: user?.email,
-      id: user?._id,
+      id: new mongoose.Types.ObjectId(user?._id),
       role: user?.role,
-      picture:user?.picture!
+      picture: user?.picture!,
     };
 
     const { accessToken, refreshToken } = await createTokens(Payload);

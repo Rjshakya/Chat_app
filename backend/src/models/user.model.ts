@@ -6,13 +6,16 @@ const userScheme = new Schema(
       type: String,
       required: true,
     },
-    userName:{
-      type:String
-      
-    },
     email: {
       type: String,
       required: true,
+      unique: true,
+      index: true,
+    },
+    username: {
+      type: String,
+      required: true,
+      default: null,
       unique: true,
       index: true,
     },
@@ -27,20 +30,20 @@ const userScheme = new Schema(
       enum: ["user", "admin"],
       default: "user",
     },
-    last_loggedIn : {
-      type:String,
-      default:null
+    last_loggedIn: {
+      type: String,
+      default: null,
     },
 
-    isOnline:{
-      type:Boolean,
-      default:false
-    }
-
-
+    isOnline: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
 
+
 const User = mongoose.model("users", userScheme);
+
 export default User;

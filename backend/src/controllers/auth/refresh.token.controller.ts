@@ -1,6 +1,7 @@
 import { Request, Response, RequestHandler } from "express";
 import { createTokens, verifyToken } from "../../lib/jwt.js";
 import User from "../../models/user.model.js";
+import { authService } from "../../services/authService.js";
 
 export const refreshTokenController: RequestHandler = async (req, res) => {
   try {
@@ -18,16 +19,26 @@ export const refreshTokenController: RequestHandler = async (req, res) => {
     }
 
     const verifiedRes = await verifyToken(oldrefreshToken);
-    const payload = {
-      name: verifiedRes?.name,
-      email: verifiedRes?.email,
-      id: verifiedRes?.id,
-      role: verifiedRes?.role,
-      picture: verifiedRes?.picture!,
-    };
-    const user = await User.findById(payload?.id);
+    const user = await authService.getUserByID(`${verifiedRes?.id}`);
 
-    const { accessToken, refreshToken } = await createTokens(payload!);
+    if (!user) {
+      res.status(400).json({
+        message: "unauthorised request",
+      });
+
+      return undefined;
+    }
+
+    const { id, email, name, picture, role } = verifiedRes!;
+
+    const { accessToken, refreshToken } = await createTokens({
+      id,
+      email,
+      name,
+      picture,
+      role,
+    });
+    
     res
       .status(200)
       .cookie("accessToken", accessToken, {

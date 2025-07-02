@@ -29,6 +29,7 @@ export const handleSearch: RequestHandler = async (req, res) => {
           picture: 1,
           isOnline:1,
           last_loggedIn:1,
+          username:1,
           score: { $meta: "searchScore" },
         },
       },

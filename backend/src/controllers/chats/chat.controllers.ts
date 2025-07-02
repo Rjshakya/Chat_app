@@ -127,7 +127,7 @@ export const getRecentChat: RequestHandler = async (req, res) => {
         success: false,
       });
 
-      return;
+      return undefined
     }
 
     const chatOwner = req?.query?.chatOwner;
